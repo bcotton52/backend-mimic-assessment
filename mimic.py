@@ -46,30 +46,22 @@ columns, so the output looks better.
 import random
 import sys
 
-__author__ = "???"
+__author__ = "Qu33n B (Brandi Cotton)"
 
 
 def create_mimic_dict(filename):
-    """Returns mimic dict mapping each word to list of words which follow it. 
-    For example:
-        Input: "I am a software developer, and I don't care who knows"
-        Output: 
-            {
-                "" : ["I"],
-                "I" : ["am", "don't"], 
-                "am": ["a"], 
-                "a": ["software"],
-                "software" : ["developer,"],
-                "developer," : ["and"],
-                "and" : ["I"],
-                "I" : ["don't"],
-                "don't" : ["care"],
-                "care" : ["who"],
-                "who" : ["knows"]
-            }
-    """
-    # +++your code here+++
-    
+    wordDict = {}
+    with open(filename, 'r') as file:
+        for line in file:
+            wordList = line.split()
+            previous = ''
+            for word in wordList:
+                if not previous in wordDict:
+                    wordDict[previous] = [word]
+                else:
+                    wordDict[previous].append(word)
+                previous = word
+    return wordDict
 
 def print_mimic(mimic_dict, start_word):
     """Given a previously compiled mimic_dict and start_word, prints 200 random words:
@@ -78,14 +70,17 @@ def print_mimic(mimic_dict, start_word):
         - Randomly select a new word from the next-list
         - Repeat this process 200 times
     """
-    # +++your code here+++
-    pass
-
+    for nextWord in range(200):
+        print(start_word),
+        nextWord = mimic_dict.get(start_word)
+        if not nextWord:
+            nextWord = mimic_dict['']
+        start_word = random.choice(nextWord)
 
 # Provided main(), calls mimic_dict() and mimic()
 def main():
     if len(sys.argv) != 2:
-        print 'usage: python mimic.py file-to-read'
+        print ('usage: python mimic.py file-to-read')
         sys.exit(1)
 
     d = create_mimic_dict(sys.argv[1])
